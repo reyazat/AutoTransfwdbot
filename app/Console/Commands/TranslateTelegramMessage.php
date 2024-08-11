@@ -7,6 +7,7 @@ use Telegram\Bot\Api;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslateTelegramMessage extends Command
 {
@@ -15,6 +16,7 @@ class TranslateTelegramMessage extends Command
 
     protected $telegram;
     protected $chatGPT;
+    protected $trans;
 
     public function __construct()
     {
@@ -22,6 +24,9 @@ class TranslateTelegramMessage extends Command
 
         $this->telegram = new Api(env("TELEGRAM_BOT_TOKEN"));
         $this->chatGPT = new Client();
+        $this->trans = new GoogleTranslate(); 
+        $this->trans->setSource('en'); 
+        $this->trans->setTarget('fa');
     }
 
     public function handle()
@@ -39,8 +44,6 @@ class TranslateTelegramMessage extends Command
         ]);
         foreach ($updates as $update) {
             if($update['update_id'] != Cache::get('update_id')){
-                Cache::put('update_id', $update['update_id']);
-
                 if (isset($update['channel_post']) && (string)$update['channel_post']['chat']['id'] === $channelAId) {
                     
                     if(isset($update['channel_post']['text'])){
@@ -63,10 +66,11 @@ class TranslateTelegramMessage extends Command
                         // $result = json_decode($response->getBody()->getContents(), true);
                         // dd($result);
                         // $translatedText = $result['choices'][0]['message']['content'];
-        
+                        $translatedMessage = $this->trans->translate($message);
+
                         $this->telegram->sendMessage([
                             'chat_id' => $channelBId,
-                            'text' => $message,
+                            'text' => $translatedMessage,
                         ]);
                     }else {
                         $this->telegram->forwardMessage([
@@ -76,7 +80,7 @@ class TranslateTelegramMessage extends Command
                         ]);
                     }
                 }
-
+                Cache::put('update_id', $update['update_id']);
             }
         }
     }
