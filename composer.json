@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.9"
+        "guzzlehttp/guzzle": "^7.9",
+        "laravel/framework": "^11.9",
+        "telegram-bot/api": "^2.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
