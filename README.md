@@ -1,4 +1,4 @@
-# AutoTransfwdbot
+# AutoTransfwdbot Power by AI
 
 **AutoTransfwdbot** is a Telegram bot designed to seamlessly manage your channels by automatically translating and forwarding messages from one channel to another in real-time. Perfect for handling multilingual communities and keeping channels in sync, this bot is built to run continuously, ensuring that messages are always up-to-date.
 
